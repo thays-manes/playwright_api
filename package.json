@@ -1,0 +1,32 @@
+{
+  "name": "api-playwright-jsonplaceholder",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Testes automatizados de API (JSONPlaceholder) com Playwright Test, TypeScript, Zod e Allure Report.",
+  "engines": {
+    "node": ">=20.12.0"
+  },
+  "scripts": {
+    "pretest": "npm run clean:results",
+    "test": "playwright test",
+    "pretest:api": "npm run clean:results",
+    "test:api": "playwright test --project=api",
+    "pretest:schemas": "npm run clean:results",
+    "test:schemas": "playwright test --project=schemas",
+    "typecheck": "tsc --noEmit",
+    "explore:api": "node scripts/explore-api.mjs",
+    "report:html": "playwright show-report playwright-report",
+    "report:allure:generate": "allure generate allure-results --output allure-report",
+    "report:allure:open": "allure open allure-report",
+    "clean:results": "node scripts/clean.mjs allure-results",
+    "clean": "node scripts/clean.mjs allure-results allure-report playwright-report test-results"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.0",
+    "@types/node": "^22.10.0",
+    "allure": "^3.0.0",
+    "allure-playwright": "^3.3.0",
+    "typescript": "^5.9.2",
+    "zod": "^4.1.0"
+  }
+}
