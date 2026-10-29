@@ -1,2 +1,0 @@
-export const POST_ID_WITH_COMMENTS = 1;
-export const POST_ID_WITHOUT_COMMENTS = 999_999;

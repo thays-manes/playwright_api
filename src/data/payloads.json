@@ -1,0 +1,16 @@
+{
+  "criarPost": {
+    "userId": 1,
+    "title": "Meu primeiro post automatizado",
+    "body": "Este post foi enviado pelo teste de POST."
+  },
+  "atualizarPostCompleto": {
+    "id": 1,
+    "userId": 1,
+    "title": "Título alterado pelo PUT",
+    "body": "Corpo alterado pelo PUT."
+  },
+  "atualizarSoTitulo": {
+    "title": "Título alterado pelo PATCH"
+  }
+}

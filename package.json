@@ -7,19 +7,14 @@
     "node": ">=20.12.0"
   },
   "scripts": {
-    "pretest": "npm run clean:results",
-    "test": "playwright test",
-    "pretest:api": "npm run clean:results",
-    "test:api": "playwright test --project=api",
-    "pretest:schemas": "npm run clean:results",
-    "test:schemas": "playwright test --project=schemas",
+    "test": "npm run limpar && playwright test",
+    "test:api": "npm run limpar && playwright test --project=api",
+    "test:schemas": "npm run limpar && playwright test --project=schemas",
     "typecheck": "tsc --noEmit",
-    "explore:api": "node scripts/explore-api.mjs",
     "report:html": "playwright show-report playwright-report",
     "report:allure:generate": "allure generate allure-results --output allure-report",
     "report:allure:open": "allure open allure-report",
-    "clean:results": "node scripts/clean.mjs allure-results",
-    "clean": "node scripts/clean.mjs allure-results allure-report playwright-report test-results"
+    "limpar": "node -e \"require('fs').rmSync('allure-results',{recursive:true,force:true})\""
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0",

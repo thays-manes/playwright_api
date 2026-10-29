@@ -1,55 +1,34 @@
+// Arquivo de configuração do Playwright: define ONDE estão os testes, QUAL API chamar e QUAIS relatórios gerar.
 import { defineConfig } from '@playwright/test';
-import { environment } from './src/config/environment';
-
-const isCI = Boolean(process.env.CI);
 
 export default defineConfig({
+  // Pasta onde ficam os arquivos de teste
   testDir: './tests',
-  outputDir: 'test-results',
-  fullyParallel: true,
-  forbidOnly: isCI,
-  retries: isCI ? 1 : 0,
-  workers: isCI ? 2 : undefined,
-  timeout: 30_000,
-  expect: { timeout: 5_000 },
 
-  // Cada reporter grava em sua própria pasta, sem sobrescrever o outro.
+  // Tempo máximo de cada teste (30 segundos)
+  timeout: 30_000,
+
+  // Relatórios gerados ao final da execução:
+  // - list: mostra o resultado no terminal
+  // - html: relatório do Playwright na pasta playwright-report
+  // - allure-playwright: dados para o relatório com gráficos (pasta allure-results)
   reporter: [
     ['list'],
     ['html', { outputFolder: 'playwright-report', open: 'never' }],
-    [
-      'allure-playwright',
-      {
-        resultsDir: 'allure-results',
-        detail: true,
-        suiteTitle: true,
-        environmentInfo: {
-          API_BASE_URL: environment.apiBaseUrl,
-          NODE_VERSION: process.version,
-          OS: process.platform,
-        },
-      },
-    ],
+    ['allure-playwright', { resultsDir: 'allure-results' }],
   ],
 
-  // Somente APIRequestContext: nenhum navegador é usado ou instalado.
   use: {
-    baseURL: environment.apiBaseUrl,
-    extraHTTPHeaders: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
+    // URL base da API. Nos testes escrevemos só o final, ex.: '/posts/1'.
+    // Para usar outra URL: $env:API_BASE_URL="https://..." (PowerShell) antes de rodar os testes.
+    baseURL: process.env.API_BASE_URL ?? 'https://jsonplaceholder.typicode.com',
   },
 
+  // Dois grupos de testes, para poder rodar cada um separado:
+  // - api: testes que chamam a API (todos, menos o schemas.spec.ts)
+  // - schemas: testes dos schemas, que não chamam a API
   projects: [
-    {
-      name: 'api',
-      testDir: './tests',
-      testIgnore: '**/schemas/**',
-    },
-    {
-      name: 'schemas',
-      testDir: './tests/schemas',
-    },
+    { name: 'api', testIgnore: 'schemas.spec.ts' },
+    { name: 'schemas', testMatch: 'schemas.spec.ts' },
   ],
 });
